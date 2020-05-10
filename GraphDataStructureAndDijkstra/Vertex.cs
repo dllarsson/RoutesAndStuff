@@ -2,7 +2,7 @@
 
 namespace GraphDataStructureAndDijkstra
 {
-    public class Vertex
+    public class Vertex //Vertex class
     {
         public bool Visited { get; set; }
         public string Name { get; set; }
