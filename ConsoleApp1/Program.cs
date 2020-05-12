@@ -1,6 +1,8 @@
 ﻿using GraphDataStructureAndDijkstra;
 using System;
+using System.Diagnostics;
 using System.Text;
+using System.Threading;
 
 namespace ConsoleApp1
 {
@@ -10,9 +12,15 @@ namespace ConsoleApp1
         {
             while (true)
             {
+
+
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
                 GraphGenerator gg = new GraphGenerator();
                 Graph g = gg.Generate(10);
 
+                stopwatch.Stop();
+                Console.WriteLine(stopwatch.Elapsed.TotalMilliseconds);
 
 
 
@@ -20,23 +28,33 @@ namespace ConsoleApp1
                 {
                     Console.WriteLine(item);
                 }
+                int c = 0;
                 foreach (var item in gg.edgesCount)
                 {
-                    Console.WriteLine(item);
+                    Console.WriteLine(item + " real: " + gg.numberOfEdges[c]);
+                    c++;
                 }
                 var startVertex = int.Parse(Console.ReadLine());
                 var endVertex = int.Parse(Console.ReadLine());
                 Dijkstra d = new Dijkstra(g, startVertex, endVertex);
 
-                Console.WriteLine( d.SearchFromTo(startVertex, endVertex));
+                var path = d.SearchFromTo(startVertex, endVertex);
+                StringBuilder sb = new StringBuilder("Path: ");
+                for (int i = path.Count - 1; i > -1; i--)
+                {
+                    sb.Append(" - " + g.Vertices[path[i]].Name);
+                }
+                sb.Append("  Total cost: " + d.ShortestDistances[endVertex]);
+                Console.WriteLine(sb);
                 for (int i = 0; i < d.ShortestDistances.Length; i++)
                 {
                     Console.WriteLine("vertex: " + g.Vertices[i].Name + "  Distance: " + d.ShortestDistances[i] + "    via vertex: + " + g.Vertices[d.PreviousVertices[i]].Name);
                 }
-                
+
 
                 Console.ReadLine();
             }
+
         }
     }
 }

@@ -18,6 +18,7 @@ namespace FormsApp
         Graphics drawGraphics;
 
         Graph g;
+        List<int[]> coords;
 
         public Form1()
         {
@@ -35,7 +36,7 @@ namespace FormsApp
             GraphGenerator gg = new GraphGenerator();
             Graph g = gg.Generate(int.Parse(tbNumberOfVertices.Text));
             this.g = g;
-            var coords = getRandomCoords(g.NumberOfVertices);
+            coords = getRandomCoords(g.NumberOfVertices);
             Pen pen = new Pen(Color.Black);
             Pen pen2 = new Pen(Color.Red);
             Pen pen3 = new Pen(Color.Blue);
@@ -51,7 +52,7 @@ namespace FormsApp
                 drawGraphics.DrawString(vertexName, new System.Drawing.Font("Arial", 30), pen2.Brush, xy[0] + 25, xy[1] + 25);
 
 
-             
+
             }
             for (int k = 0; k < g.NumberOfVertices; k++)
             {
@@ -66,12 +67,12 @@ namespace FormsApp
                         if (lVertex[0] > kVertex[0])
                         {
                             weightX = (kVertex[0] + lVertex[0]) / 2;
-                             weightY = (kVertex[1] + lVertex[1]) / 2;
+                            weightY = (kVertex[1] + lVertex[1]) / 2;
                         }
                         else
                         {
-                             weightX = (lVertex[0] + kVertex[0]) / 2;
-                             weightY = (lVertex[1] + kVertex[1]) / 2;
+                            weightX = (lVertex[0] + kVertex[0]) / 2;
+                            weightY = (lVertex[1] + kVertex[1]) / 2;
                         }
                         int weight = g.AdjacenyMatrix[k, l];
 
@@ -104,7 +105,7 @@ namespace FormsApp
                 xCoords.Remove(x);
                 yCoords.Remove(y);
 
-                coords.Add(new int[] { x * 50, y * 50 });
+                coords.Add(new int[] { x * 60, y * 60 });
 
             }
 
@@ -117,5 +118,43 @@ namespace FormsApp
             this.g = null;
             drawArea.Image = null;
         }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            int start = -1;
+            int end = -1;
+            for (int i = 0; i < g.NumberOfVertices; i++)
+            {
+                if (g.Vertices[i].Name == tbStartNode.Text.ToUpper())
+                {
+                    start = i;
+                }
+                if (g.Vertices[i].Name == tbEndNode.Text.ToUpper())
+                {
+                    end = i;
+                }
+            }
+            Dijkstra d = new Dijkstra(g,start, end);
+            var path = d.SearchFromTo(start, end);
+            tbResult.Clear();
+            for (int i = path.Count - 1; i > -1; i--)
+            {
+                tbResult.AppendText("\r\n" + g.Vertices[path[i]].Name);
+            }
+            tbResult.AppendText("\r\n" + d.ShortestDistances[end]);
+            PrintShortestPath(path);
+        }
+        public void PrintShortestPath(List<int> path)
+        {
+            Pen pen = new Pen(Color.Red, 5);
+            for (int i = 0; i < path.Count -1; i++)
+            {
+                int[] kVertex = coords[path[i]];
+                int[] lVertex = coords[path[i + 1]];
+                drawGraphics.DrawLine(pen, kVertex[0] + 50, kVertex[1] + 50, lVertex[0] + 50, lVertex[1] + 50);
+
+            }
+        }
+
     }
 }

@@ -66,7 +66,7 @@ namespace GraphDataStructureAndDijkstra
                 currentVertex.RemoveAt(count);
 
                 twoOrThree -= edgesCount[avaibleVertices[count]];
-
+                if (twoOrThree < 0) nodesMissingEdges = false;
                 for (int i = 0; i < twoOrThree; i++)
                 {
 
@@ -83,12 +83,81 @@ namespace GraphDataStructureAndDijkstra
                         g.AddEdge(avaibleVertices[count], index[i], weight);
                         g.AddEdge(index[i], avaibleVertices[count], weight);
 
+
+
                         edgesCount[avaibleVertices[count]]++;
                         edgesCount[index[i]]++;
                     }
                 }
 
                 count++;
+            }
+            while (true) // This means that there are still Vertices without enough neighbors.
+            {
+                int neighbors = 0;
+                List<int> neighborsArr = new List<int>();
+                int[] allNeighbors = new int[g.NumberOfVertices];
+                for (int x = 0; x < g.NumberOfVertices; x++)
+                {
+                    for (int y = 0; y < g.NumberOfVertices; y++)
+                    {
+                        if (g.AdjacenyMatrix[x, y] > 0)
+                        {
+                            neighbors++;
+                            allNeighbors[x]++;
+
+                            g.Vertices[x].Neighbors.Add(y);
+                        }
+                    }
+                    if (neighbors < 2)
+                    {
+                        neighborsArr.Add(x);
+                    }
+                    neighbors = 0;
+                }
+                if (neighborsArr.Count == 0)
+                {
+                    numberOfEdges = allNeighbors;
+                    break;
+                }
+                for (int j = 0; j < neighborsArr.Count; j++)
+                {
+                    int neighborIndex = -1;
+                    for (int i = 0; i < g.NumberOfVertices; i++)
+                    {
+                        if (allNeighbors[i] < 3 && i != neighborsArr[j] && !g.Vertices[neighborsArr[j]].Neighbors.Contains(i))
+                        {
+                            neighborIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (neighborIndex < 0)
+                    {
+                        int weight = r.Next(11);
+                        g.AddEdge(neighborsArr[j], 0, weight);
+                        g.AddEdge(0, neighborsArr[j], weight);
+                        Console.WriteLine("Special BUT all are 3 but one");
+                        for (int i = 0; i < g.NumberOfVertices; i++)
+                        {
+                            if (g.AdjacenyMatrix[0, i] > 0 && g.AdjacenyMatrix[0, i] != neighborsArr[j])
+                            {
+                                g.AdjacenyMatrix[0, i] = 0;
+                                g.AdjacenyMatrix[i, 0] = 0;
+                                break;
+                            }
+                        }
+                        neighborsArr.Remove(neighborsArr[j]);
+                    }
+                    else
+                    {
+                        int weight = r.Next(11);
+                        g.AddEdge(neighborsArr[j], neighborIndex, weight);
+                        g.AddEdge(neighborIndex, neighborsArr[j], weight);
+                        neighborsArr.Remove(neighborsArr[j]);
+                        Console.WriteLine("Special");
+                    }
+                }
             }
 
             return g;

@@ -58,25 +58,19 @@ namespace GraphDataStructureAndDijkstra
             return vertex;
         }
 
-        public StringBuilder SearchFromTo(int start, int end)
+        public List<int> SearchFromTo(int start, int end)
         {
-            // Console.WriteLine("vertex: " + g.Vertices[i].Name + "  Distance: " + d.ShortestDistances[i] + "    via vertex: + " + g.Vertices[d.PreviousVertices[i]].Name);
             var currentVertex = end;
-            List<string> path = new List<string>();
-            StringBuilder sb = new StringBuilder("Path: ");
-            path.Add(Graph.Vertices[end].Name);
+            List<int> path = new List<int>();
+            path.Add(end);
             while (currentVertex != start)
             {
-                path.Add(Graph.Vertices[PreviousVertices[currentVertex]].Name);
+                path.Add(PreviousVertices[currentVertex]);
 
                 currentVertex = Graph.Vertices.IndexOf(Graph.Vertices[PreviousVertices[currentVertex]]);
             }
-            for (int i = path.Count -1; i > -1; i--)
-            {
-                sb.Append(" - " + path[i]);
-            }
-            sb.Append("  Total cost: " + ShortestDistances[end]);
-            return sb;
+
+            return path;
         }
 
     }
