@@ -28,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.drawArea = new System.Windows.Forms.PictureBox();
-            this.brnGenerateGraph = new System.Windows.Forms.Button();
-            this.tbNumberOfVertices = new System.Windows.Forms.TextBox();
             this.lblNumberOfVertices = new System.Windows.Forms.Label();
             this.btnClear = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -39,33 +36,11 @@
             this.EndNode = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.tbResult = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.drawArea)).BeginInit();
+            this.trackBar = new System.Windows.Forms.TrackBar();
+            this.drawArea = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
-            // 
-            // drawArea
-            // 
-            this.drawArea.Location = new System.Drawing.Point(131, 12);
-            this.drawArea.Name = "drawArea";
-            this.drawArea.Size = new System.Drawing.Size(1241, 687);
-            this.drawArea.TabIndex = 0;
-            this.drawArea.TabStop = false;
-            // 
-            // brnGenerateGraph
-            // 
-            this.brnGenerateGraph.Location = new System.Drawing.Point(12, 57);
-            this.brnGenerateGraph.Name = "brnGenerateGraph";
-            this.brnGenerateGraph.Size = new System.Drawing.Size(113, 23);
-            this.brnGenerateGraph.TabIndex = 1;
-            this.brnGenerateGraph.Text = "Generate Graph";
-            this.brnGenerateGraph.UseVisualStyleBackColor = true;
-            this.brnGenerateGraph.Click += new System.EventHandler(this.btn_GenerateGraph);
-            // 
-            // tbNumberOfVertices
-            // 
-            this.tbNumberOfVertices.Location = new System.Drawing.Point(12, 31);
-            this.tbNumberOfVertices.Name = "tbNumberOfVertices";
-            this.tbNumberOfVertices.Size = new System.Drawing.Size(113, 20);
-            this.tbNumberOfVertices.TabIndex = 2;
             // 
             // lblNumberOfVertices
             // 
@@ -78,7 +53,7 @@
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(12, 86);
+            this.btnClear.Location = new System.Drawing.Point(12, 504);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(113, 23);
             this.btnClear.TabIndex = 4;
@@ -89,7 +64,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 146);
+            this.label1.Location = new System.Drawing.Point(12, 229);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 5;
@@ -97,14 +72,14 @@
             // 
             // tbStartNode
             // 
-            this.tbStartNode.Location = new System.Drawing.Point(12, 163);
+            this.tbStartNode.Location = new System.Drawing.Point(12, 246);
             this.tbStartNode.Name = "tbStartNode";
             this.tbStartNode.Size = new System.Drawing.Size(113, 20);
             this.tbStartNode.TabIndex = 6;
             // 
             // tbEndNode
             // 
-            this.tbEndNode.Location = new System.Drawing.Point(12, 212);
+            this.tbEndNode.Location = new System.Drawing.Point(12, 295);
             this.tbEndNode.Name = "tbEndNode";
             this.tbEndNode.Size = new System.Drawing.Size(113, 20);
             this.tbEndNode.TabIndex = 8;
@@ -112,7 +87,7 @@
             // EndNode
             // 
             this.EndNode.AutoSize = true;
-            this.EndNode.Location = new System.Drawing.Point(12, 195);
+            this.EndNode.Location = new System.Drawing.Point(12, 278);
             this.EndNode.Name = "EndNode";
             this.EndNode.Size = new System.Drawing.Size(55, 13);
             this.EndNode.TabIndex = 7;
@@ -120,7 +95,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(12, 239);
+            this.btnSearch.Location = new System.Drawing.Point(12, 322);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(113, 23);
             this.btnSearch.TabIndex = 9;
@@ -130,17 +105,47 @@
             // 
             // tbResult
             // 
-            this.tbResult.Location = new System.Drawing.Point(12, 269);
+            this.tbResult.Location = new System.Drawing.Point(12, 352);
             this.tbResult.Multiline = true;
             this.tbResult.Name = "tbResult";
             this.tbResult.Size = new System.Drawing.Size(113, 146);
             this.tbResult.TabIndex = 10;
+            // 
+            // trackBar
+            // 
+            this.trackBar.LargeChange = 1;
+            this.trackBar.Location = new System.Drawing.Point(12, 28);
+            this.trackBar.Maximum = 5;
+            this.trackBar.Name = "trackBar";
+            this.trackBar.Size = new System.Drawing.Size(113, 45);
+            this.trackBar.TabIndex = 11;
+            this.trackBar.ValueChanged += new System.EventHandler(this.trackBar_ValueChanged);
+            // 
+            // drawArea
+            // 
+            this.drawArea.Location = new System.Drawing.Point(131, 12);
+            this.drawArea.Name = "drawArea";
+            this.drawArea.Size = new System.Drawing.Size(1241, 687);
+            this.drawArea.TabIndex = 12;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(13, 62);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(99, 108);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "0";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1384, 711);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.drawArea);
+            this.Controls.Add(this.trackBar);
             this.Controls.Add(this.tbResult);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.tbEndNode);
@@ -149,23 +154,16 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.lblNumberOfVertices);
-            this.Controls.Add(this.tbNumberOfVertices);
-            this.Controls.Add(this.brnGenerateGraph);
-            this.Controls.Add(this.drawArea);
             this.Name = "Form1";
             this.Text = "ROUTE CITY";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.drawArea)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox drawArea;
-        private System.Windows.Forms.Button brnGenerateGraph;
-        private System.Windows.Forms.TextBox tbNumberOfVertices;
         private System.Windows.Forms.Label lblNumberOfVertices;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Label label1;
@@ -174,6 +172,9 @@
         private System.Windows.Forms.Label EndNode;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.TextBox tbResult;
+        private System.Windows.Forms.TrackBar trackBar;
+        private System.Windows.Forms.Panel drawArea;
+        private System.Windows.Forms.Label label2;
     }
 }
 
