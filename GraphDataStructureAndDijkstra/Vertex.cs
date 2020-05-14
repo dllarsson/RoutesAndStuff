@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace GraphDataStructureAndDijkstra
 {
+    /*Holds the information about node and their connections*/
     public class Vertex 
     {
         public string Name { get; private set; }

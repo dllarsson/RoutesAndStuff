@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace NUnitTestProject
 {
+    /*Testing the edges so that the functionality that includes them work as planed*/
     public class TestEdges
     {
         [Test]
@@ -29,18 +30,11 @@ namespace NUnitTestProject
         public void TestThatEdgeGetsRandomWeight()
         {
             Graph graph = new Graph(3);
-                graph.AddEdge(0, 1);
+            graph.AddEdge(0, 1);
 
             Assert.Greater(graph.AdjacenyMatrix[0, 1], 0);
             Assert.Less(graph.AdjacenyMatrix[0, 1], 11);
         }
-        //[Test]
-        //public void TestIfVertexAandBisConnectedWithEdge()
-        //{
-        //    var g = new Graph(4);
-
-
-        //}
         [Test]
         public void TestIfEdgeHasSameWeight()
         {
@@ -51,10 +45,9 @@ namespace NUnitTestProject
             Assert.IsTrue(graph.AdjacenyMatrix[0, 1] == graph.AdjacenyMatrix[1, 0]);
         }
     }
+    /*This class will test the graf generator so that the outcome of generation of connections are right*/
     public class TestGraphGenerator
     {
-        //In this some test more methods within the class will be tested. In the method ConnectRouts the are 2 more methods involved to create
-        // all the connections to the nodes. If they work as excpected the test will pass.
         [Test]
         public void TestThatVerticesHasEdges()
         {
@@ -111,6 +104,10 @@ namespace NUnitTestProject
             Assert.Pass();
         }
     }
+
+    /*This class test the diffrent cases the can happend when you are searching for the shortest path.
+     * We are useing a mock object to test these diffrent cases so the the outcome will be the same 
+     everytime we test our methods*/
     public class TestRoutCalculator
     {
         [Test]
@@ -142,6 +139,7 @@ namespace NUnitTestProject
         }
 
     }
+    /*This is the integration test. That all our methods works togheter*/
     public class IntegrationTest
     {
         [Test]

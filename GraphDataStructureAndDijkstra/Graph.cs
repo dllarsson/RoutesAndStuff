@@ -4,6 +4,7 @@ using System.Text;
 
 namespace GraphDataStructureAndDijkstra
 {
+    /*Holds on the information about the graph and everying that the graph needs*/
     public class Graph
     {
         public int NumberOfVertices { get; private set; }

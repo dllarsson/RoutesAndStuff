@@ -7,6 +7,7 @@ using System.Xml;
 
 namespace GraphDataStructureAndDijkstra
 {
+    /*This class will calculate the nodes in diffrent posistions and connections*/
     public class GraphGenerator
     {
         private string names = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

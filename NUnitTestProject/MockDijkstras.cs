@@ -8,7 +8,7 @@ namespace NUnitTestProject
     {
         public int[] ShortestDistances { get; set; }
         public int[] PreviousVertices { get; set; }
-        public List<int> unvisitedVertices { get; set; } = new List<int>();
+        public List<int> UnvisitedVertices { get; set; } = new List<int>();
         public MockGraph Graph { get; set; }
 
         public MockDijkstra(MockGraph graph, int startVertex, int endVertex)
@@ -18,12 +18,12 @@ namespace NUnitTestProject
             PreviousVertices = new int[graph.NumberOfVertices];
             for (int i = 0; i < graph.NumberOfVertices; i++)
             {
-                unvisitedVertices.Add(i);
+                UnvisitedVertices.Add(i);
                 ShortestDistances[i] = int.MaxValue;
             }
             ShortestDistances[startVertex] = 0;
 
-            while (unvisitedVertices.Count > 0)
+            while (UnvisitedVertices.Count > 0)
             {
                 var currentVertex = GetNextVertex();
                 for (int i = 0; i < graph.NumberOfVertices; i++)
@@ -44,7 +44,7 @@ namespace NUnitTestProject
         {
             var smallestKnownDistance = int.MaxValue;
             var vertex = -1;
-            foreach (var value in unvisitedVertices)
+            foreach (var value in UnvisitedVertices)
             {
                 if (ShortestDistances[value] <= smallestKnownDistance)
                 {
@@ -52,7 +52,7 @@ namespace NUnitTestProject
                     vertex = value;
                 }
             }
-            unvisitedVertices.Remove(vertex);
+            UnvisitedVertices.Remove(vertex);
             return vertex;
         }
 

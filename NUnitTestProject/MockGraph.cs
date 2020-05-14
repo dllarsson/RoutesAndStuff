@@ -5,17 +5,16 @@ using System.Text;
 
 namespace NUnitTestProject
 {
-    
+    //Graph the we use to test our search functions. We want to use the same graph all the time so 
+    //that we can test properly
     public class MockGraph
     {
         public int NumberOfVertices { get; private set; }
-        private Random r { get; set; }
+        private Random random { get; set; }
 
         public List<Vertex> Vertices { get; private set; }
         public int[,] AdjacenyMatrix { get; private set; }
         public int[] Edges { get; private set; }
-
-
 
         public MockGraph()
         {
@@ -23,7 +22,7 @@ namespace NUnitTestProject
             Vertices = new List<Vertex>(5);
             AdjacenyMatrix = new int[5, 5];
             Edges = new int[5];
-            r = new Random();
+            random = new Random();
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 5; j++)
@@ -49,7 +48,7 @@ namespace NUnitTestProject
             return Vertices[vertex].Name;
         }
 
-        public List<String> PrintGraph()
+        public List<string> PrintGraph()
         {
             List<string> graphString = new List<string>();
             for (int i = 0; i < NumberOfVertices; i++)
