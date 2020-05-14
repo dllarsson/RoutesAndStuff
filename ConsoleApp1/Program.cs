@@ -8,12 +8,25 @@ namespace ConsoleApp1
 {
     class Program
     {
+        static Random r = new Random();
         static void Main(string[] args)
         {
             while (true)
             {
 
+                for (int i = 0; i < 20000; i++) {
+                    int random = r.Next(1, 11);
+                    Console.WriteLine(random);
+                    
+                //{
+                //    Stopwatch stopwatch2 = new Stopwatch();
+                //    stopwatch2.Start();
+                //    GraphGenerator gg2 = new GraphGenerator();
+                //    Graph g2 = gg2.Generate(10);
 
+                //    stopwatch2.Stop();
+                //    Console.WriteLine(stopwatch2.Elapsed.TotalMilliseconds);
+                }
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 GraphGenerator gg = new GraphGenerator();
@@ -28,15 +41,10 @@ namespace ConsoleApp1
                 {
                     Console.WriteLine(item);
                 }
-                int c = 0;
-                foreach (var item in gg.edgesCount)
-                {
-                    Console.WriteLine(item + " real: " + gg.numberOfEdges[c]);
-                    c++;
-                }
+
                 var startVertex = int.Parse(Console.ReadLine());
                 var endVertex = int.Parse(Console.ReadLine());
-                Dijkstra d = new Dijkstra(g, startVertex, endVertex);
+                Dijkstra d = new Dijkstra(g, startVertex);
 
                 var path = d.SearchFromTo(startVertex, endVertex);
                 StringBuilder sb = new StringBuilder("Path: ");

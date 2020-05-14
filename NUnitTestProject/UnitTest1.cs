@@ -3,76 +3,67 @@ using NUnit.Framework;
 
 namespace NUnitTestProject
 {
-    public class TestNodeConnections
+    public class TestEdges
     {
-        Node nodeOne;
-        Node nodeTwo;
-        int weight;
-        Connections testConnection;
-
         [Test]
-        public void TestThatConnectionIsAdded()
+        public void TestThatEdgeIsAdded()
         {
-            testConnection = new Connections(new Node("A"), new Node("B"), 5);
+            Graph graph = new Graph(2);
+            graph.AddEdge(0, 1);
 
-            Assert.AreEqual(testConnection.a.Name, "A");
-            Assert.AreEqual(testConnection.b.Name, "B");
-            Assert.AreEqual(testConnection.Weight, 5);
+            Assert.IsTrue(graph.AdjacenyMatrix[0, 1] > 0 && graph.AdjacenyMatrix[1, 0] > 0);
         }
-        [Test]
-        public void TestThatConnectionIsAddedToList()
-        {
-            nodeOne = new Node("A");
-            nodeTwo = new Node("B");
-            nodeOne.AddConnections(nodeOne, nodeTwo);
 
-            Assert.IsTrue(nodeOne.Connections.Count == 1);
-            Assert.IsTrue(nodeTwo.Connections.Count == 1);
+        [Test]
+        public void TestThatEdgeIsAddedToList()
+        {
+            Graph graph = new Graph(3);
+
+            graph.AddEdge(0, 1);
+            graph.AddEdge(0, 2);
+
+            Assert.AreEqual(graph.Edges[0], 2);
         }
-        [Test]
-        public void TestThatConnectionGetsRandomWeight()
-        {
-            nodeOne = new Node("A");
-            nodeTwo = new Node("B");
-            nodeOne.AddConnections(nodeOne, nodeTwo);
-            weight = nodeOne.Connections[0].Weight;
 
-            Assert.IsTrue(weight > 0 && weight <= 10);
+        [Test]
+        public void TestThatEdgeGetsRandomWeight()
+        {
+            Graph graph = new Graph(3);
+                graph.AddEdge(0, 1);
+
+            Assert.Greater(graph.AdjacenyMatrix[0, 1], 0);
+            Assert.Less(graph.AdjacenyMatrix[0, 1], 11);
         }
-        [Test]
-        public void TestIfNodeAHasConnectionWithBAndBWithA()
-        {
-            nodeOne = new Node("A");
-            nodeTwo = new Node("B");
-            nodeOne.AddConnections(nodeOne, nodeTwo);
+        //[Test]
+        //public void TestIfVertexAandBisConnectedWithEdge()
+        //{
+        //    var g = new Graph(4);
 
-            Assert.AreEqual(nodeOne.Connections[0].b, nodeTwo);
-        }
-        [Test]
-        public void TestIfAConnectionHasTheSameWeight()
-        {
-            nodeOne = new Node("A");
-            nodeTwo = new Node("B");
-            nodeOne.AddConnections(nodeOne, nodeTwo);
 
-            Assert.AreEqual(nodeOne.Connections[0].Weight, nodeTwo.Connections[0].Weight);
+        //}
+        [Test]
+        public void TestIfEdgeHasSameWeight()
+        {
+            Graph graph = new Graph(4);
+            graph.AddEdge(0, 1);
+            graph.AddEdge(1, 0);
+
+            Assert.IsTrue(graph.AdjacenyMatrix[0, 1] == graph.AdjacenyMatrix[1, 0]);
         }
     }
-    public class TestRoutGenerator
+    public class TestGraphGenerator
     {
-        RouteConnector testConnector;
-
         //In this some test more methods within the class will be tested. In the method ConnectRouts the are 2 more methods involved to create
         // all the connections to the nodes. If they work as excpected the test will pass.
         [Test]
-        public void TestThatANodeHasAConnection()
+        public void TestThatVerticesHasEdges()
         {
-            testConnector = new RouteConnector();
-            testConnector.ConnectRouts();
+            GraphGenerator graphGenerator = new GraphGenerator();
+            Graph graph = graphGenerator.Generate(5);
 
-            for (int i = 0; i < testConnector.Nodes.Count; i++)
+            for (int i = 0; i < 5; i++)
             {
-                if (testConnector.Nodes[i].Connections.Count == 0)
+                if (graph.Edges[i] == 0)
                 {
                     Assert.Fail();
                 }
@@ -81,23 +72,23 @@ namespace NUnitTestProject
         }
 
         [Test]
-        public void TestThatThereIsTenNodes()
+        public void TestThatThereAreTenVertices()
         {
-            testConnector = new RouteConnector();
-            testConnector.CreateListNodes();
+            GraphGenerator graphGenerator = new GraphGenerator();
+            Graph graph = graphGenerator.Generate(10);
 
-            Assert.IsTrue(testConnector.Nodes.Count == 10);
+            Assert.IsTrue(graph.Vertices.Count == 10);
         }
 
         [Test]
-        public void TestThatEachNodeHasTwoToThreeConnections()
+        public void TestThatEachVertexHasTwoToThreeConnections()
         {
-            testConnector = new RouteConnector();
-            testConnector.ConnectRouts();
+            GraphGenerator graphGenerator = new GraphGenerator();
+            Graph graph = graphGenerator.Generate(10);
 
-            for (int i = 0; i < testConnector.Nodes.Count; i++)
+            for (int i = 0; i < graph.NumberOfVertices; i++)
             {
-                if (testConnector.Nodes[i].Connections.Count <= 1 || testConnector.Nodes[i].Connections.Count > 3)
+                if (graph.Edges[i] < 2)
                 {
                     Assert.Fail();
                 }
@@ -105,19 +96,16 @@ namespace NUnitTestProject
             Assert.Pass();
         }
         [Test]
-        public void TestIfANodeHasConnectionToItself()
+        public void TestIfAVertexHasAConnectionToItSelf()
         {
-            testConnector = new RouteConnector();
-            testConnector.ConnectRouts();
+            GraphGenerator graphGenerator = new GraphGenerator();
+            Graph graph = graphGenerator.Generate(10);
 
-            for (int i = 0; i < testConnector.Nodes.Count; i++)
+            for (int i = 0; i < graph.NumberOfVertices; i++)
             {
-                for (int x = 0; x < testConnector.Nodes[i].Connections.Count; x++)
+                if (graph.AdjacenyMatrix[i, i] > 0)
                 {
-                    if (testConnector.Nodes[i].Connections[x].a == testConnector.Nodes[i].Connections[x].b)
-                    {
-                        Assert.Fail();
-                    }
+                    Assert.Fail();
                 }
             }
             Assert.Pass();
@@ -125,66 +113,48 @@ namespace NUnitTestProject
     }
     public class TestRoutCalculator
     {
-        MockObject mock;
-        Vertex testVertex;
-        RouteCalculator calculator;
         [Test]
         public void TestThatShortestPathIsCalculatedCorrectly()
         {
-            mock = new MockObject();
-            calculator = new RouteCalculator(mock.mockObject);
-            testVertex = calculator.FindShortestPath(mock.mockObject[0], mock.mockObject[2], 0);
+            MockGraph mockGraph = new MockGraph();
 
-            Assert.IsTrue(testVertex.GoldenNumber == 6);
-        }
-        [Test]
-        public void TestThatRightNodeGetsReturned()
-        {
-            mock = new MockObject();
-            calculator = new RouteCalculator(mock.mockObject);
-            testVertex = calculator.FindShortestPath(mock.mockObject[0], mock.mockObject[2], 0);
+            mockGraph.AddMockData();
 
-            Assert.IsTrue(testVertex.vertex == "C");
+            MockDijkstra dijkstra = new MockDijkstra(mockGraph, 0, 2);
+            var shortestPath = dijkstra.SearchFromTo(0, 2);
+
+            Assert.IsTrue(shortestPath[0] == 2);
+            Assert.IsTrue(shortestPath[1] == 4);
+            Assert.IsTrue(shortestPath[2] == 3);
+            Assert.IsTrue(shortestPath[3] == 0);
         }
+
         [Test]
         public void TestThatTheParentVertexIsTheExpected()
         {
-            mock = new MockObject();
-            calculator = new RouteCalculator(mock.mockObject);
-            testVertex = calculator.FindShortestPath(mock.mockObject[0], mock.mockObject[2], 0);
+            MockGraph graph = new MockGraph();
+            graph.AddMockData();
+            MockDijkstra dijkstra = new MockDijkstra(graph, 0, 2);
+            dijkstra.SearchFromTo(0, 2);
+            int testVertex = dijkstra.PreviousVertices[2];
 
-            Assert.IsTrue(testVertex.parentVertex == "E");
+            Assert.IsTrue(testVertex == 4);
         }
-        [Test]
-        public void TestThatItTakeTheExpectedWay()
-        {
-            mock = new MockObject();
-            calculator = new RouteCalculator(mock.mockObject);
-            testVertex = calculator.FindShortestPath(mock.mockObject[0], mock.mockObject[4], 0);
 
-            Assert.IsTrue(testVertex.parentVertex == "B");
-            Assert.IsTrue(testVertex.vertex == "E");
-            Assert.AreEqual(testVertex.GoldenNumber, 5);
-        }
     }
     public class IntegrationTest
     {
-        RouteConnector testConnector;
-        Vertex testVertex;
-        RouteCalculator calculator;
-
         [Test]
         public void TestRouteConnectorAnNodeConnectionsWithCalculateRoute()
         {
-            testConnector = new RouteConnector();
-            testConnector.ConnectRouts();
-            calculator = new RouteCalculator(testConnector.Nodes);
-            testVertex = calculator.FindShortestPath(testConnector.Nodes[0], testConnector.Nodes[1], 0);
+            GraphGenerator graphGenerator = new GraphGenerator();
+            Graph graph = graphGenerator.Generate(10);
+            Dijkstra dijkstra = new Dijkstra(graph, 0);
 
-            Assert.AreEqual(testVertex.vertex, testConnector.Nodes[1].Name);
-            Assert.IsTrue(testVertex.Distance < 10);
-            Assert.IsTrue(testVertex.Distance > 0);
-            Assert.IsTrue(testConnector.Nodes.Count == 10);
+            Assert.AreEqual(graph.NumberOfVertices, 10);
+            Assert.IsNotNull(dijkstra.ShortestDistances);
+            Assert.IsNotNull(graphGenerator.NumberOfEdges);
+
         }
     }
 }

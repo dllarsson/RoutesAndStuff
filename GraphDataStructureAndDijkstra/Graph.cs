@@ -7,16 +7,19 @@ namespace GraphDataStructureAndDijkstra
     public class Graph
     {
         public int NumberOfVertices { get; private set; }
-       
+        private Random WeightRandomizer { get; set; }
         public List<Vertex> Vertices { get; private set; }
         public int[,] AdjacenyMatrix { get; private set; }
-
+        public int[] Edges { get; private set; }
 
         public Graph(int numberOfVertices)
         {
             NumberOfVertices = numberOfVertices;
             Vertices = new List<Vertex>(numberOfVertices);
             AdjacenyMatrix = new int[numberOfVertices,numberOfVertices];
+            Edges = new int[numberOfVertices];
+            WeightRandomizer = new Random();
+
             for (int i = 0; i < numberOfVertices; i++)
             {
                 for (int j = 0; j < numberOfVertices; j++)
@@ -26,34 +29,35 @@ namespace GraphDataStructureAndDijkstra
             }
         }
 
-        public void AddVertex(string name)
+        private void AddVertex(string name)
         {
             Vertices.Add(new Vertex(name));
         }
-        public void AddEdge(int startVertex, int endVertex, int weight)
+
+        public void AddEdge(int startVertex, int endVertex)
         {
+            int weight = WeightRandomizer.Next(1, 11);
             AdjacenyMatrix[startVertex, endVertex] = weight;
-        }
-        public string ShowVertex(int vertex)
-        {
-            return Vertices[vertex].Name;
+            AdjacenyMatrix[endVertex, startVertex] = weight;
+            Edges[startVertex]++;
+            Edges[endVertex]++;
         }
         
-        public List<String> PrintGraph()
+        public List<string> PrintGraph()
         {
-            List<string> graphString = new List<string>();
+            List<string> allVerticesWithShortestPath = new List<string>();
             for (int i = 0; i < NumberOfVertices; i++)
             {
                 for (int j = 0; j < NumberOfVertices; j++)
                 {
                     if (AdjacenyMatrix[i,j] > 0) // This means that there is an edge, the number indicated the weight of the edge.
                     {
-                        graphString.Add(Vertices[i].Name + "--" + Vertices[j].Name + " " + AdjacenyMatrix[i,j]);
+                        allVerticesWithShortestPath.Add(Vertices[i].Name + "--" + Vertices[j].Name + " " + AdjacenyMatrix[i,j]);
                     }
                 }
             }
 
-            return graphString;
+            return allVerticesWithShortestPath;
         }
 
     }

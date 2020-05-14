@@ -1,32 +1,29 @@
-﻿using Microsoft.Win32.SafeHandles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 
-namespace GraphDataStructureAndDijkstra
+namespace NUnitTestProject
 {
-    public class Dijkstra
+    public class MockDijkstra
     {
-        public int[] ShortestDistances { get; private set; }
-        public int[] PreviousVertices { get; private set; }
-        public List<int> UnvisitedVertices { get; private set; } 
-        public Graph Graph { get; private set; }
+        public int[] ShortestDistances { get; set; }
+        public int[] PreviousVertices { get; set; }
+        public List<int> unvisitedVertices { get; set; } = new List<int>();
+        public MockGraph Graph { get; set; }
 
-        public Dijkstra(Graph graph, int startVertex)
+        public MockDijkstra(MockGraph graph, int startVertex, int endVertex)
         {
-            UnvisitedVertices = new List<int>();
             Graph = graph;
             ShortestDistances = new int[graph.NumberOfVertices];
             PreviousVertices = new int[graph.NumberOfVertices];
             for (int i = 0; i < graph.NumberOfVertices; i++)
             {
-                UnvisitedVertices.Add(i);
+                unvisitedVertices.Add(i);
                 ShortestDistances[i] = int.MaxValue;
             }
             ShortestDistances[startVertex] = 0;
 
-            while (UnvisitedVertices.Count > 0)
+            while (unvisitedVertices.Count > 0)
             {
                 var currentVertex = GetNextVertex();
                 for (int i = 0; i < graph.NumberOfVertices; i++)
@@ -47,7 +44,7 @@ namespace GraphDataStructureAndDijkstra
         {
             var smallestKnownDistance = int.MaxValue;
             var vertex = -1;
-            foreach (var value in UnvisitedVertices)
+            foreach (var value in unvisitedVertices)
             {
                 if (ShortestDistances[value] <= smallestKnownDistance)
                 {
@@ -55,7 +52,7 @@ namespace GraphDataStructureAndDijkstra
                     vertex = value;
                 }
             }
-            UnvisitedVertices.Remove(vertex);
+            unvisitedVertices.Remove(vertex);
             return vertex;
         }
 

@@ -10,15 +10,14 @@ namespace GraphDataStructureAndDijkstra
     public class GraphGenerator
     {
         private string names = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Random r = new Random();
-        public List<int> edgesCount = new List<int>();
-
-        public int[] numberOfEdges;
+        private Random random = new Random();
+        private List<int> edgesCount = new List<int>();
+        public int[] NumberOfEdges { get; private set; }
 
         public Graph Generate(int numberOfVerices)
         {
-            Graph g = new Graph(numberOfVerices);
-            numberOfEdges = new int[numberOfVerices]; // this keeps track of how many edges each vertex has.
+            Graph graph = new Graph(numberOfVerices);
+            NumberOfEdges = new int[numberOfVerices]; // this keeps track of how many edges each vertex has.
             List<string> avaibleNames = new List<string>();
 
             foreach (var item in names)
@@ -29,7 +28,7 @@ namespace GraphDataStructureAndDijkstra
             {
                 Vertex vertex = new Vertex(avaibleNames[0]);
                 avaibleNames.RemoveAt(0);
-                g.Vertices.Add(vertex);
+                graph.Vertices.Add(vertex);
             }
 
 
@@ -39,12 +38,12 @@ namespace GraphDataStructureAndDijkstra
                 avaibleVertices.Add(i);
             }
 
-
             bool nodesMissingEdges = true;
             for (int i = 0; i < numberOfVerices; i++)
             {
                 edgesCount.Add(0);
             }
+
             int count = 0;
             while (nodesMissingEdges) //While true add edges
             {
@@ -60,7 +59,7 @@ namespace GraphDataStructureAndDijkstra
                     }
                 }
 
-                int twoOrThree = r.Next(2, 4);
+                int twoOrThree = random.Next(2, 4);
                 List<int> index = new List<int>();
                 List<int> currentVertex = new List<int>(avaibleVertices);
                 currentVertex.RemoveAt(count);
@@ -70,7 +69,7 @@ namespace GraphDataStructureAndDijkstra
                 for (int i = 0; i < twoOrThree; i++)
                 {
 
-                    var randomIndex = r.Next(1, currentVertex.Count);
+                    var randomIndex = random.Next(1, currentVertex.Count);
                     index.Add(currentVertex[randomIndex]);
                     currentVertex.Remove(currentVertex[randomIndex]);
 
@@ -79,53 +78,49 @@ namespace GraphDataStructureAndDijkstra
                 {
                     if (edgesCount[index[i]] < 3)
                     {
-                        int weight = r.Next(11);
-                        g.AddEdge(avaibleVertices[count], index[i], weight);
-                        g.AddEdge(index[i], avaibleVertices[count], weight);
-
-
-
+                        int weight = random.Next(11);
+                        graph.AddEdge(avaibleVertices[count], index[i]);
                         edgesCount[avaibleVertices[count]]++;
                         edgesCount[index[i]]++;
                     }
                 }
-
                 count++;
             }
+
             while (true) // This means that there are still Vertices without enough neighbors.
             {
-                int neighbors = 0;
-                List<int> neighborsArr = new List<int>();
-                int[] allNeighbors = new int[g.NumberOfVertices];
-                for (int x = 0; x < g.NumberOfVertices; x++)
+                int neighbor = 0;
+                List<int> neighborsList = new List<int>();
+                int[] allNeighbors = new int[graph.NumberOfVertices];
+                for (int x = 0; x < graph.NumberOfVertices; x++)
                 {
-                    for (int y = 0; y < g.NumberOfVertices; y++)
+                    for (int y = 0; y < graph.NumberOfVertices; y++)
                     {
-                        if (g.AdjacenyMatrix[x, y] > 0)
+                        if (graph.AdjacenyMatrix[x, y] > 0)
                         {
-                            neighbors++;
+                            neighbor++;
                             allNeighbors[x]++;
 
-                            g.Vertices[x].Neighbors.Add(y);
+                            graph.Vertices[x].Neighbors.Add(y);
                         }
                     }
-                    if (neighbors < 2)
+                    if (neighbor < 2)
                     {
-                        neighborsArr.Add(x);
+                        neighborsList.Add(x);
                     }
-                    neighbors = 0;
+                    neighbor = 0;
                 }
-                if (neighborsArr.Count == 0)
+                if (neighborsList.Count == 0)
                 {
-                    numberOfEdges = allNeighbors;
+                    NumberOfEdges = allNeighbors;
                     break;
                 }
-                for (int j = 0; j < neighborsArr.Count; j++)
+                for (int j = 0; j < neighborsList.Count; j++)
                 {
                     int neighborIndex = -1;
-                    for (int i = 0; i < g.NumberOfVertices; i++)
+                    for (int i = 0; i < graph.NumberOfVertices; i++)
                     {
-                        if (allNeighbors[i] < 3 && i != neighborsArr[j] && !g.Vertices[neighborsArr[j]].Neighbors.Contains(i))
+                        if (allNeighbors[i] < 3 && i != neighborsList[j] && !graph.Vertices[neighborsList[j]].Neighbors.Contains(i))
                         {
                             neighborIndex = i;
                             break;
@@ -134,33 +129,29 @@ namespace GraphDataStructureAndDijkstra
 
                     if (neighborIndex < 0)
                     {
-                        int weight = r.Next(11);
-                        g.AddEdge(neighborsArr[j], 0, weight);
-                        g.AddEdge(0, neighborsArr[j], weight);
-                        Console.WriteLine("Special BUT all are 3 but one");
-                        for (int i = 0; i < g.NumberOfVertices; i++)
+                        int weight = random.Next(11);
+                        graph.AddEdge(neighborsList[j], 0);
+                        for (int i = 0; i < graph.NumberOfVertices; i++)
                         {
-                            if (g.AdjacenyMatrix[0, i] > 0 && g.AdjacenyMatrix[0, i] != neighborsArr[j])
+                            if (graph.AdjacenyMatrix[0, i] > 0 && graph.AdjacenyMatrix[0, i] != neighborsList[j])
                             {
-                                g.AdjacenyMatrix[0, i] = 0;
-                                g.AdjacenyMatrix[i, 0] = 0;
+                                graph.AdjacenyMatrix[0, i] = 0;
+                                graph.AdjacenyMatrix[i, 0] = 0;
                                 break;
                             }
                         }
-                        neighborsArr.Remove(neighborsArr[j]);
+                        neighborsList.Remove(neighborsList[j]);
                     }
                     else
                     {
-                        int weight = r.Next(11);
-                        g.AddEdge(neighborsArr[j], neighborIndex, weight);
-                        g.AddEdge(neighborIndex, neighborsArr[j], weight);
-                        neighborsArr.Remove(neighborsArr[j]);
-                        Console.WriteLine("Special");
+                        int weight = random.Next(11);
+                        graph.AddEdge(neighborsList[j], neighborIndex);
+                        neighborsList.Remove(neighborsList[j]);
                     }
                 }
             }
 
-            return g;
+            return graph;
         }
 
     }

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 namespace GraphDataStructureAndDijkstra
 {
-    public class Vertex //Vertex class
+    public class Vertex 
     {
-        public string Name { get; set; }
-        public List<int> Neighbors { get; set; } = new List<int>();
+        public string Name { get; private set; }
+        public List<int> Neighbors { get; private set; } 
         public Vertex(string name)
         {
+            Neighbors = new List<int>();
             Name = name;
         }
     }
