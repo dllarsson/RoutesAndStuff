@@ -120,6 +120,7 @@
             this.trackBar.Name = "trackBar";
             this.trackBar.Size = new System.Drawing.Size(216, 45);
             this.trackBar.TabIndex = 11;
+            this.trackBar.Value = 5;
             this.trackBar.ValueChanged += new System.EventHandler(this.trackBar_ValueChanged);
             // 
             // drawArea
@@ -157,10 +158,10 @@
             this.Controls.Add(this.lblNumberOfVertices);
             this.Name = "FormRouteCity";
             this.Text = "ROUTE CITY";
-            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+            
 
         }
 

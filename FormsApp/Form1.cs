@@ -24,13 +24,19 @@ namespace FormsApp
         {
             InitializeComponent();
             drawGraphics = drawArea.CreateGraphics();
+            Shown += FormRouteCity_Shown;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+
+        //This method paints the graph to the form with 10 nodes as default.
+        private void FormRouteCity_Shown(Object sender, EventArgs e)
         {
-
+            GenerateGraph(10);
+            PaintGraph();
+            lblVerticesNumber.Text = "10";
         }
 
+        //This method generates generates a new graph with the number of verices inputed
         private void GenerateGraph(int numberOfVertices)
         {
             GraphGenerator graphGenerator = new GraphGenerator();
@@ -39,6 +45,7 @@ namespace FormsApp
             this.graph = graph;
         }
 
+        //This paints the graph the the object currently holds.
         private Graphics PaintGraph()
         {
             Graphics graphics;
@@ -47,14 +54,16 @@ namespace FormsApp
             Pen bluePen = new Pen(Color.Blue);
 
 
+
+            
             for (int i = 0; i < graph.Vertices.Count; i++)
             {
                 int[] xyCoords = coords[i];
 
                 var vertexName = graph.Vertices[i].Name;
 
-                drawGraphics.DrawEllipse(blackPen, xyCoords[0], xyCoords[1], 100, 100);
-                drawGraphics.DrawString(vertexName, new System.Drawing.Font("Arial", 30), redPen.Brush, xyCoords[0] + 25, xyCoords[1] + 25);
+                drawGraphics.DrawEllipse(blackPen, xyCoords[0], xyCoords[1], 100, 100); //Draws the circles(vertex)
+                drawGraphics.DrawString(vertexName, new System.Drawing.Font("Arial", 30), redPen.Brush, xyCoords[0] + 25, xyCoords[1] + 25); // Draws the name of vertex
 
 
 
@@ -69,8 +78,8 @@ namespace FormsApp
                         int[] secondVertexCoords = coords[l];
                         int weightX = 0;
                         int weightY = 0;
-                        if (secondVertexCoords[0] > firstVertexCoords[0])
-                        {
+                        if (secondVertexCoords[0] > firstVertexCoords[0]) // If vertex a is ahead or after the vertex b in the X coordinate,      
+                        {                                                 // this determens witch direction to paint lines between vertices.
                             weightX = (firstVertexCoords[0] + secondVertexCoords[0]) / 2;
                             weightY = (firstVertexCoords[1] + secondVertexCoords[1]) / 2;
                         }
@@ -81,15 +90,16 @@ namespace FormsApp
                         }
                         int weight = graph.AdjacenyMatrix[k, l];
 
-                        drawGraphics.DrawString(weight.ToString(), new System.Drawing.Font("Arial", 30), bluePen.Brush, weightX, weightY);
+                        drawGraphics.DrawString(weight.ToString(), new System.Drawing.Font("Arial", 30), bluePen.Brush, weightX, weightY); // Draw Weight between two vertices
 
-                        drawGraphics.DrawLine(blackPen, firstVertexCoords[0] + 50, firstVertexCoords[1] + 50, secondVertexCoords[0] + 50, secondVertexCoords[1] + 50);
+                        drawGraphics.DrawLine(blackPen, firstVertexCoords[0] + 50, firstVertexCoords[1] + 50, secondVertexCoords[0] + 50, secondVertexCoords[1] + 50); // Draw line between two vertices
                     }
                 }
             }
             return graphics = drawGraphics;
         }
 
+        //This method returns a list of random coordinates depending on how many vertices.
         private List<int[]> getRandomCoords(int numberOfVertices)
         {
             Random randomCoords = new Random();
@@ -118,7 +128,7 @@ namespace FormsApp
             return coords;
         }
 
-
+        //This takes value from textbox from and to and uses the Dijkstra class method SearchFromTo to then print shortet path.
         private void btnSearch_Click(object sender, EventArgs e)
         {
             int start = -1;
@@ -134,9 +144,6 @@ namespace FormsApp
                     end = i;
                 }
             }
-
-
-            
             Dijkstra dijkstra = new Dijkstra(graph,start);
             var path = dijkstra.SearchFromTo(start, end);
             tbResult.Clear();
@@ -144,9 +151,10 @@ namespace FormsApp
             {
                 tbResult.AppendText("\r\n" + graph.Vertices[i].Name + "  Distance: " + dijkstra.ShortestDistances[i] + " via vertex: " + graph.Vertices[dijkstra.PreviousVertices[i]].Name);
             }
-            PrintShortestPath(path);
+            PrintShortestPath(path); 
         }
 
+        //This method draws a red line between verices on the inputed path list.
         public void PrintShortestPath(List<int> path)
         {
             drawArea.Refresh();
@@ -163,12 +171,12 @@ namespace FormsApp
             }
         }
 
-
+        //Generates graph
         private void brnGenerateGraph_Click(object sender, EventArgs e)
         {
             GenerateGraph(trackBar.Value + 5);
         }
-
+        //When trackbar is changed it will generate new graph, clear current graph drawing and pant the new graph.
         private void trackBar_ValueChanged(object sender, EventArgs e)
         {
             lblVerticesNumber.Text = (5+trackBar.Value).ToString();
@@ -177,6 +185,7 @@ namespace FormsApp
             PaintGraph();
         }
 
+        //Remove the graph drawing on the forms panel.
         private void btnClear_Click(object sender, EventArgs e)
         {
             drawArea.Refresh();
