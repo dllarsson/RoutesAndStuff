@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphDataStructureAndDijkstra", "GraphDataStructureAndDijkstra\GraphDataStructureAndDijkstra.csproj", "{F161A1EC-CF49-46E3-8B67-3093DFAD5F08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{EC4A5DAF-CA6E-4979-B47A-7BA34BB0C614}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormsApp", "FormsApp\FormsApp.csproj", "{826ABC15-EB0F-4E35-94A7-A1D18C746707}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitTestProject", "NUnitTestProject\NUnitTestProject.csproj", "{CE1EA4C8-EA72-4CAB-A4F5-D1F4D5CAD07D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NUnitTestProject", "NUnitTestProject\NUnitTestProject.csproj", "{CE1EA4C8-EA72-4CAB-A4F5-D1F4D5CAD07D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{F161A1EC-CF49-46E3-8B67-3093DFAD5F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F161A1EC-CF49-46E3-8B67-3093DFAD5F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F161A1EC-CF49-46E3-8B67-3093DFAD5F08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC4A5DAF-CA6E-4979-B47A-7BA34BB0C614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC4A5DAF-CA6E-4979-B47A-7BA34BB0C614}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC4A5DAF-CA6E-4979-B47A-7BA34BB0C614}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC4A5DAF-CA6E-4979-B47A-7BA34BB0C614}.Release|Any CPU.Build.0 = Release|Any CPU
 		{826ABC15-EB0F-4E35-94A7-A1D18C746707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{826ABC15-EB0F-4E35-94A7-A1D18C746707}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{826ABC15-EB0F-4E35-94A7-A1D18C746707}.Release|Any CPU.ActiveCfg = Release|Any CPU
