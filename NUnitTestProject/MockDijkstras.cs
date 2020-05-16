@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NUnitTestProject
 {
+    //Mock dijksta class to be able to test a static graph with dijkstra algorithm
     public class MockDijkstra
     {
         public int[] ShortestDistances { get; set; }
