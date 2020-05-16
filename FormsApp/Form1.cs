@@ -133,25 +133,37 @@ namespace FormsApp
         {
             int start = -1;
             int end = -1;
-            for (int i = 0; i < graph.NumberOfVertices; i++)
+
+            var matchesStart = graph.Vertices.Where(v => v.Name == tbStartNode.Text.ToUpper()); // This checks if the vertices exists as typed in the text box.
+            var matchesEnd = graph.Vertices.Where(v => v.Name == tbEndNode.Text.ToUpper());
+            if (matchesStart.Count() > 0 && matchesEnd.Count() > 0)
             {
-                if (graph.Vertices[i].Name == tbStartNode.Text.ToUpper())
+
+                for (int i = 0; i < graph.NumberOfVertices; i++)
                 {
-                    start = i;
+                    if (graph.Vertices[i].Name == tbStartNode.Text.ToUpper())
+                    {
+                        start = i;
+                    }
+                    if (graph.Vertices[i].Name == tbEndNode.Text.ToUpper())
+                    {
+                        end = i;
+                    }
                 }
-                if (graph.Vertices[i].Name == tbEndNode.Text.ToUpper())
+                Dijkstra dijkstra = new Dijkstra(graph, start);
+                var path = dijkstra.SearchFromTo(start, end);
+                tbResult.Clear();
+                for (int i = graph.NumberOfVertices - 1; i > -1; i--)
                 {
-                    end = i;
+                    tbResult.AppendText("\r\n" + graph.Vertices[i].Name + "  Distance: " + dijkstra.ShortestDistances[i] + " via vertex: " + graph.Vertices[dijkstra.PreviousVertices[i]].Name);
                 }
+                PrintShortestPath(path);
             }
-            Dijkstra dijkstra = new Dijkstra(graph,start);
-            var path = dijkstra.SearchFromTo(start, end);
-            tbResult.Clear();
-            for (int i = graph.NumberOfVertices - 1; i > -1; i--)
+            else
             {
-                tbResult.AppendText("\r\n" + graph.Vertices[i].Name + "  Distance: " + dijkstra.ShortestDistances[i] + " via vertex: " + graph.Vertices[dijkstra.PreviousVertices[i]].Name);
+                MessageBox.Show("Vertex or vertices does not excist. Please try again");
             }
-            PrintShortestPath(path); 
+            
         }
 
         //This method draws a red line between verices on the inputed path list.
@@ -189,6 +201,7 @@ namespace FormsApp
         private void btnClear_Click(object sender, EventArgs e)
         {
             drawArea.Refresh();
+            tbResult.Clear();
         }
     }
 }

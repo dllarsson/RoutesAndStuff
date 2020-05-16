@@ -7,10 +7,10 @@ using System.Xml;
 
 namespace GraphDataStructureAndDijkstra
 {
-    /*This class will calculate the nodes in diffrent posistions and connections*/
+    //This class generates a Graph with a number of vertices and edges
     public class GraphGenerator
     {
-        private string names = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private string names = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //Each vertex get a letter as name.
         private Random random = new Random();
         private List<int> edgesCount = new List<int>();
         public int[] NumberOfEdges { get; private set; }
@@ -29,7 +29,7 @@ namespace GraphDataStructureAndDijkstra
             {
                 Vertex vertex = new Vertex(avaibleNames[0]);
                 avaibleNames.RemoveAt(0);
-                graph.Vertices.Add(vertex);
+                graph.Vertices.Add(vertex); //Sets name on vertex
             }
 
 
@@ -97,7 +97,7 @@ namespace GraphDataStructureAndDijkstra
                 {
                     for (int y = 0; y < graph.NumberOfVertices; y++)
                     {
-                        if (graph.AdjacenyMatrix[x, y] > 0)
+                        if (graph.AdjacenyMatrix[x, y] > 0) // If There is an edge
                         {
                             neighbor++;
                             allNeighbors[x]++;
@@ -105,13 +105,13 @@ namespace GraphDataStructureAndDijkstra
                             graph.Vertices[x].Neighbors.Add(y);
                         }
                     }
-                    if (neighbor < 2)
+                    if (neighbor < 2) //If vertex has less than two neighbors then add neigbor
                     {
                         neighborsList.Add(x);
                     }
                     neighbor = 0;
                 }
-                if (neighborsList.Count == 0)
+                if (neighborsList.Count == 0) //If all has neighbors then break while loop.
                 {
                     NumberOfEdges = allNeighbors;
                     break;
@@ -134,7 +134,7 @@ namespace GraphDataStructureAndDijkstra
                         graph.AddEdge(neighborsList[j], 0);
                         for (int i = 0; i < graph.NumberOfVertices; i++)
                         {
-                            if (graph.AdjacenyMatrix[0, i] > 0 && graph.AdjacenyMatrix[0, i] != neighborsList[j])
+                            if (graph.AdjacenyMatrix[0, i] > 0 && graph.AdjacenyMatrix[0, i] != neighborsList[j]) //this removes and edge
                             {
                                 graph.AdjacenyMatrix[0, i] = 0;
                                 graph.AdjacenyMatrix[i, 0] = 0;

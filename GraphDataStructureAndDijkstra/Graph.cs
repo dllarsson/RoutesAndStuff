@@ -25,7 +25,7 @@ namespace GraphDataStructureAndDijkstra
             {
                 for (int j = 0; j < numberOfVertices; j++)
                 {
-                    AdjacenyMatrix[i, j] = 0;
+                    AdjacenyMatrix[i, j] = 0; //Populate array with 0s
                 }
             }
         }
@@ -44,6 +44,7 @@ namespace GraphDataStructureAndDijkstra
             Edges[endVertex]++;
         }
         
+        //This method returns the graph as a list of string with the vertex names 
         public List<string> PrintGraph()
         {
             List<string> allVerticesWithShortestPath = new List<string>();

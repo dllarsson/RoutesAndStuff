@@ -149,7 +149,7 @@ namespace NUnitTestProject
             Graph graph = graphGenerator.Generate(10);
             Dijkstra dijkstra = new Dijkstra(graph, 0);
 
-            Assert.AreEqual(graph.NumberOfVertices, 10);
+            Assert.AreEqual(10, graph.NumberOfVertices);
             Assert.IsNotNull(dijkstra.ShortestDistances);
             Assert.IsNotNull(graphGenerator.NumberOfEdges);
 
