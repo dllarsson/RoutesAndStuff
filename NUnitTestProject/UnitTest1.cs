@@ -1,5 +1,8 @@
 using GraphDataStructureAndDijkstra;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
+using System;
+using System.Collections.Generic;
 
 namespace NUnitTestProject
 {
@@ -45,7 +48,7 @@ namespace NUnitTestProject
             Assert.IsTrue(graph.AdjacenyMatrix[0, 1] == graph.AdjacenyMatrix[1, 0]);
         }
     }
-    /*This class will test the graf generator so that the outcome of generation of connections are right*/
+    /*This class will test the graf generator so that the outcome of generation of edges are right*/
     public class TestGraphGenerator
     {
         [Test]
@@ -103,6 +106,37 @@ namespace NUnitTestProject
             }
             Assert.Pass();
         }
+
+
+        //Generates a million different graphs and tests if there are any graph with less than 2 or more than 3 edges.
+        [Test]
+        public void TestThatThereAreNoVerticesWithLessThanTwoAndNotMoreThanTreeEdges()
+        {
+            GraphGenerator graphGenerator = new GraphGenerator();
+
+            List<int[]> numberOfTimesWithLessThanTwoOrMoreThanTreeEdges = new List<int[]>();
+
+            for (int i = 0; i < 1000000; i++)
+            {
+                Graph graph = graphGenerator.Generate(10);
+                numberOfTimesWithLessThanTwoOrMoreThanTreeEdges.Add(Array.FindAll(graph.Edges, (a => a < 2 || a > 3)));
+                var t = Array.FindAll(graph.Edges, (a => a < 2 || a > 3));
+                if (t.Length > 0)
+                {
+
+                }
+            }
+            int count = 0;
+            foreach (var item in numberOfTimesWithLessThanTwoOrMoreThanTreeEdges)
+            {
+                if (item.Length > 0)
+                {
+                    Assert.Fail();
+                }
+                count++;
+            }
+            Assert.Pass("Succes!");
+        }
     }
 
     /*This class test the diffrent cases the can happend when you are searching for the shortest path.
@@ -151,7 +185,6 @@ namespace NUnitTestProject
 
             Assert.AreEqual(10, graph.NumberOfVertices);
             Assert.IsNotNull(dijkstra.ShortestDistances);
-            Assert.IsNotNull(graphGenerator.NumberOfEdges);
 
         }
     }

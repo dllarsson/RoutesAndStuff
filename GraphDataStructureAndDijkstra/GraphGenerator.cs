@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Globalization;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Xml;
 
@@ -12,146 +14,127 @@ namespace GraphDataStructureAndDijkstra
     {
         private string names = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //Each vertex get a letter as name.
         private Random random = new Random();
-        private List<int> edgesCount = new List<int>();
-        public int[] NumberOfEdges { get; private set; }
+        private Graph graph { get; set; }
+        private int loopCounter = 0; // Keeps track of how many loops were needed to add edges to all vertices.
 
-        public Graph Generate(int numberOfVerices)
+        private void AddVerticesAndSetNames()
         {
-            Graph graph = new Graph(numberOfVerices);
-            NumberOfEdges = new int[numberOfVerices]; // this keeps track of how many edges each vertex has.
             List<string> avaibleNames = new List<string>();
 
             foreach (var item in names)
             {
                 avaibleNames.Add(item.ToString());
             }
-            for (int i = 0; i < numberOfVerices; i++)
+            for (int i = 0; i < graph.NumberOfVertices; i++)
             {
                 Vertex vertex = new Vertex(avaibleNames[0]);
                 avaibleNames.RemoveAt(0);
                 graph.Vertices.Add(vertex); //Sets name on vertex
             }
+        }
 
-
-            List<int> avaibleVertices = new List<int>(numberOfVerices);
-            for (int i = 0; i < numberOfVerices; i++)
+        //Returns true if all vertices has 2-3 edges.
+        private bool CheckIfAllVerticesHasMoraThanOneEdgeAndNotMoreThanThree()
+        {
+            var result = graph.Edges.Where(e => e < 2 || e > 3);
+            if (result.Count() > 0)
             {
-                avaibleVertices.Add(i);
+                return false;
             }
-
-            bool nodesMissingEdges = true;
-            for (int i = 0; i < numberOfVerices; i++)
+            else
             {
-                edgesCount.Add(0);
+                return true;
             }
+        }
 
-            int count = 0;
-            while (nodesMissingEdges) //While true add edges
+        //Returns a list of indices of vertices with not enough edges.
+        private List<int> GetAvaibleIndices(int current)
+        {
+            List<int> indices = new List<int>();
+            for (int i = 0; i < graph.NumberOfVertices; i++)
             {
-                if (count == avaibleVertices.Count)
+                if (graph.Edges[i] < 3 && i != current)
                 {
-                    if (edgesCount.Any(z => z < 2))
-                    {
-                        count = 0;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    indices.Add(i);
                 }
-
-                int twoOrThree = random.Next(2, 4);
-                List<int> index = new List<int>();
-                List<int> currentVertex = new List<int>(avaibleVertices);
-                currentVertex.RemoveAt(count);
-
-                twoOrThree -= edgesCount[avaibleVertices[count]];
-                if (twoOrThree < 0) nodesMissingEdges = false;
-                for (int i = 0; i < twoOrThree; i++)
-                {
-
-                    var randomIndex = random.Next(1, currentVertex.Count);
-                    index.Add(currentVertex[randomIndex]);
-                    currentVertex.Remove(currentVertex[randomIndex]);
-
-                }
-                for (int i = 0; i < index.Count; i++)
-                {
-                    if (edgesCount[index[i]] < 3)
-                    {
-                        int weight = random.Next(11);
-                        graph.AddEdge(avaibleVertices[count], index[i]);
-                        edgesCount[avaibleVertices[count]]++;
-                        edgesCount[index[i]]++;
-                    }
-                }
-                count++;
             }
-
-            while (true) // This means that there are still Vertices without enough neighbors.
+            if (indices.Count() == 0)
             {
-                int neighbor = 0;
-                List<int> neighborsList = new List<int>();
-                int[] allNeighbors = new int[graph.NumberOfVertices];
-                for (int x = 0; x < graph.NumberOfVertices; x++)
+                if (!CheckIfAllVerticesHasMoraThanOneEdgeAndNotMoreThanThree())
                 {
-                    for (int y = 0; y < graph.NumberOfVertices; y++)
-                    {
-                        if (graph.AdjacenyMatrix[x, y] > 0) // If There is an edge
-                        {
-                            neighbor++;
-                            allNeighbors[x]++;
-
-                            graph.Vertices[x].Neighbors.Add(y);
-                        }
-                    }
-                    if (neighbor < 2) //If vertex has less than two neighbors then add neigbor
-                    {
-                        neighborsList.Add(x);
-                    }
-                    neighbor = 0;
-                }
-                if (neighborsList.Count == 0) //If all has neighbors then break while loop.
-                {
-                    NumberOfEdges = allNeighbors;
-                    break;
-                }
-                for (int j = 0; j < neighborsList.Count; j++)
-                {
-                    int neighborIndex = -1;
                     for (int i = 0; i < graph.NumberOfVertices; i++)
                     {
-                        if (allNeighbors[i] < 3 && i != neighborsList[j] && !graph.Vertices[neighborsList[j]].Neighbors.Contains(i))
+                        for (int j = 0; j < graph.NumberOfVertices; j++)
                         {
-                            neighborIndex = i;
-                            break;
-                        }
-                    }
-
-                    if (neighborIndex < 0)
-                    {
-                        int weight = random.Next(11);
-                        graph.AddEdge(neighborsList[j], 0);
-                        for (int i = 0; i < graph.NumberOfVertices; i++)
-                        {
-                            if (graph.AdjacenyMatrix[0, i] > 0 && graph.AdjacenyMatrix[0, i] != neighborsList[j]) //this removes and edge
+                            if (graph.AdjacenyMatrix[i, j] > 0 && j != current && graph.Edges[j] == 3)
                             {
-                                graph.AdjacenyMatrix[0, i] = 0;
-                                graph.AdjacenyMatrix[i, 0] = 0;
-                                break;
+                                graph.AdjacenyMatrix[i, j] = 0;
+                                graph.AdjacenyMatrix[j, i] = 0;
+                                graph.Edges[0]--;
+                                graph.Edges[j]--;
+                                graph.AddEdge(0, current);
+                                return indices;
                             }
                         }
-                        neighborsList.Remove(neighborsList[j]);
-                    }
-                    else
-                    {
-                        int weight = random.Next(11);
-                        graph.AddEdge(neighborsList[j], neighborIndex);
-                        neighborsList.Remove(neighborsList[j]);
                     }
                 }
             }
+            return indices;
+        }
 
+        //Returns a list of random indices to add edges to.
+        private List<int> GetRandomIndicies(List<int> input, int numberOfIndices)
+        {
+            List<int> indices = new List<int>();
+            for (int i = 0; i < numberOfIndices; i++)
+            {
+                if (input.Count() == 1)
+                {
+                    indices.Add(input[0]);
+                    return indices;
+                }
+                else if (input.Count() > 1)
+                {
+                    indices.Add(input[random.Next(1, input.Count)]);
+                    input.Remove(indices[i]);
+                }
+            }
+            return indices;
+        }
+
+        //Sets edges to all vertices, stops while loop when all vertices has 2-3 edges.
+        private void SetEdges()
+        {
+            while (!CheckIfAllVerticesHasMoraThanOneEdgeAndNotMoreThanThree()) //While not true keep adding edges.
+            {
+                for (int i = 0; i < graph.NumberOfVertices; i++)
+                {
+                    var oneOrTwo = random.Next(2, 4) - graph.Edges[i];
+
+                    var indices = GetRandomIndicies(GetAvaibleIndices(i), oneOrTwo);
+                    for (int j = 0; j < indices.Count; j++)
+                    {
+                        if (graph.Edges[i] == 3 || graph.Edges[indices[j]] == 3)
+                        {
+
+                        }
+                        else
+                        {
+                            graph.AddEdge(i, indices[j]);
+                        }
+                    }
+                }
+                loopCounter++;
+            }
+        }
+
+        //Generates and returns the graph.
+        public Graph Generate(int numberOfVertices)
+        {
+            graph = new Graph(numberOfVertices);
+            AddVerticesAndSetNames();
+            SetEdges();
+            List<int> avaibleVertices = new List<int>(graph.NumberOfVertices);
             return graph;
         }
 
