@@ -131,11 +131,10 @@ namespace NUnitTestProject
             {
                 if (item.Length > 0)
                 {
-                    Assert.Fail();
+                    count++;
                 }
-                count++;
             }
-            Assert.Pass("Succes!");
+            Assert.AreEqual(0, count);
         }
     }
 
